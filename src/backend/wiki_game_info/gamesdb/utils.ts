@@ -1,8 +1,16 @@
 import { GamesDBInfo, Runner } from 'common/types'
 import { logInfo, LogPrefix } from 'backend/logger'
-import { GamesDBData } from 'common/types/gog'
+import { GamesDBData, SearchGogGamesDBResponse } from 'common/types/gog'
 import { getGamesdbData } from 'backend/storeManagers/gog/library'
 import { storeMap } from 'common/utils'
+import { axiosClient } from 'backend/utils'
+
+export async function searchGogGamesDb(title: string) {
+  const { data } = await axiosClient.get<SearchGogGamesDBResponse>(
+    `https://gamesdb.gog.com/games?title=${title}`
+  )
+  return data.items
+}
 
 export async function getInfoFromGamesDB(
   title: string,
@@ -13,7 +21,12 @@ export async function getInfoFromGamesDB(
 
   const storeName = storeMap[runner]
   if (!storeName) {
-    return { steamID: '' }
+    const [firstResult] = await searchGogGamesDb(title)
+    return {
+      steamID:
+        firstResult.releases.find((release) => release.platform_id === 'steam')
+          ?.external_id ?? ''
+    }
   }
   const gamesdb: { data?: GamesDBData } = await getGamesdbData(
     storeName,

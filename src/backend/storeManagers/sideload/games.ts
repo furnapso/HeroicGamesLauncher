@@ -28,6 +28,7 @@ import { isLinux, isMac, isWindows } from 'backend/constants/environment'
 import { removeNonSteamGame } from 'backend/shortcuts/nonesteamgame/nonesteamgame'
 
 import type LogWriter from 'backend/logger/log_writer'
+import { searchGogGamesDb } from 'backend/wiki_game_info/gamesdb/utils'
 
 export function getGameInfo(appName: string): GameInfo {
   const store = libraryStore.get('games', [])
@@ -170,10 +171,7 @@ export function isNative(appName: string): boolean {
 }
 
 export async function getExtraInfo(appName: string): Promise<ExtraInfo> {
-  logWarning(
-    `getExtraInfo not implemented on Sideload Game Manager. called for appName = ${appName}`
-  )
-  return {
+  const defaultInfo = {
     about: {
       description: '',
       shortDescription: ''
@@ -181,6 +179,23 @@ export async function getExtraInfo(appName: string): Promise<ExtraInfo> {
     reqs: [],
     storeUrl: ''
   }
+  const title = libraryStore
+    .get('games', [])
+    .find((app) => app.app_name === appName)?.title
+  if (!title) return defaultInfo
+
+  const [gameDbInfo] = await searchGogGamesDb(title)
+  return gameDbInfo
+    ? {
+        ...defaultInfo,
+        about: {
+          description: gameDbInfo.summary['*'],
+          shortDescription: gameDbInfo.summary['*']
+        },
+        genres: gameDbInfo.genres.map((genre) => genre.name['*']),
+        releaseDate: gameDbInfo.first_release_date
+      }
+    : defaultInfo
 }
 
 /* eslint-disable @typescript-eslint/no-unused-vars */

@@ -305,13 +305,6 @@ type LanguageMapper<T> = {
   [code: string]: T | undefined
 }
 
-interface Release {
-  id: string
-  platform_id: string
-  external_id: string
-  release_per_platform_id: string
-}
-
 // Data returned from https://galaxy-library.gog.com/users/${credentials.user_id}/releases
 export interface Library {
   total_count: number
@@ -529,4 +522,76 @@ export interface GOGCredentials {
   refresh_token: string
   user_id: string
   loginType: number
+}
+
+export interface SearchGogGamesDBResponse {
+  items: GogGameSearchResult[]
+}
+
+export interface GogGameSearchResult {
+  id: string
+  parent_id: null
+  dlcs_ids: string[]
+  mods_ids: string[]
+  first_release_date: string
+  releases: Release[]
+  title: LanguageMapper<string>
+  sorting_title: LanguageMapper<string>
+  type: string
+  developers_ids: string[]
+  developers: Developer[]
+  publishers_ids: string[]
+  publishers: Developer[]
+  genres_ids: string[]
+  genres: Genre[]
+  themes_ids: string[]
+  themes: Genre[]
+  screenshots: Image[]
+  videos: Video[]
+  artworks: Image[]
+  summary: LanguageMapper<string>
+  visible_in_library: boolean
+  aggregated_rating: number | null
+  game_modes: Developer[]
+  horizontal_artwork?: Image
+  background?: Image
+  vertical_cover: Image
+  cover: Image
+  logo: Image
+  icon: Image
+  square_icon: Image
+  global_popularity_all_time: number
+  global_popularity_current: number
+  slug: string
+}
+
+export interface Image {
+  url_format: string
+}
+
+export interface Developer {
+  id: string
+  name: string
+  slug: string
+}
+
+export interface Genre {
+  id: string
+  name: LanguageMapper<string>
+  slug: string
+}
+
+export interface Release {
+  id: string
+  platform_id: string
+  external_id: string
+  release_per_platform_id: string
+  availability: number
+}
+
+export interface Video {
+  provider: string
+  video_id: string
+  thumbnail_id: string
+  name: string
 }

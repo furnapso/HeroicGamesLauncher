@@ -232,14 +232,9 @@ export default React.memo(function GamePage(): JSX.Element | null {
   ])
 
   useEffect(() => {
-    window.api.getWikiGameInfo(gameInfo.title, appName, runner).then((info) => {
-      if (
-        info &&
-        (info.applegamingwiki || info.howlongtobeat || info.pcgamingwiki)
-      ) {
-        setWikiInfo(info)
-      }
-    })
+    window.api
+      .getWikiGameInfo(gameInfo.title, appName, runner)
+      .then(setWikiInfo)
   }, [appName])
 
   function handleUpdate() {
@@ -409,8 +404,9 @@ export default React.memo(function GamePage(): JSX.Element | null {
                       <h1 style={{ opacity: art_logo ? 0 : 1 }}>{title}</h1>
                       <Genres
                         genres={
-                          gameInfo.extra?.genres ||
-                          wikiInfo?.pcgamingwiki?.genres ||
+                          gameInfo.extra?.genres ??
+                          wikiInfo?.pcgamingwiki?.genres ??
+                          extraInfo?.genres ??
                           []
                         }
                       />
