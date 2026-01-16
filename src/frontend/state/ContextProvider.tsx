@@ -6,7 +6,8 @@ const initialContext: ContextType = {
   epic: {
     library: [],
     login: async () => Promise.resolve(''),
-    logout: async () => Promise.resolve()
+    logout: async () => Promise.resolve(),
+    sessionValid: false
   },
   gog: {
     library: [],
