@@ -58,6 +58,7 @@ interface StateProps {
   epic: {
     library: GameInfo[]
     username?: string
+    sessionValid?: boolean
   }
   gog: {
     library: GameInfo[]
@@ -169,7 +170,8 @@ class GlobalState extends PureComponent<Props> {
   state: StateProps = {
     epic: {
       library: libraryStore.get('library', []),
-      username: configStore.get_nodefault('userInfo.displayName')
+      username: configStore.get_nodefault('userInfo.displayName'),
+      sessionValid: configStore.get_nodefault('userInfo.sessionValid')
     },
     gog: {
       library: this.loadGOGLibrary(),
@@ -1083,7 +1085,8 @@ class GlobalState extends PureComponent<Props> {
             library: epic.library,
             username: epic.username,
             login: this.epicLogin,
-            logout: this.epicLogout
+            logout: this.epicLogout,
+            sessionValid: epic.sessionValid
           },
           gog: {
             library: gog.library,

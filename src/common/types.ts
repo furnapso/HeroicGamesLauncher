@@ -329,6 +329,7 @@ export type UserInfo = {
   account_id: string
   displayName: string
   user: string
+  sessionValid: boolean
 }
 export interface WineInstallation {
   bin: string

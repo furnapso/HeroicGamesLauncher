@@ -74,6 +74,7 @@ export interface ContextType {
     username?: string
     login: (sid: string) => Promise<string>
     logout: () => Promise<void>
+    sessionValid: boolean
   }
   gog: {
     library: GameInfo[]

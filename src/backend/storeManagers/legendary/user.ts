@@ -85,11 +85,16 @@ export class LegendaryUser {
     }
     try {
       const userInfoContent = readFileSync(legendaryUserInfo).toString()
-      const userInfoObject = JSON.parse(userInfoContent)
+      const userInfoObject = JSON.parse(userInfoContent) as {
+        account_id: string
+        displayName: string
+        refresh_expires_at: string
+      }
       const info: UserInfo = {
         account_id: userInfoObject.account_id,
         displayName: userInfoObject.displayName,
-        user: user().username
+        user: user().username,
+        sessionValid: new Date(userInfoObject.refresh_expires_at) >= new Date()
       }
       configStore.set('userInfo', info)
       return info
