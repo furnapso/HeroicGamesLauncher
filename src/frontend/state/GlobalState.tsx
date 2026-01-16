@@ -1086,7 +1086,7 @@ class GlobalState extends PureComponent<Props> {
             username: epic.username,
             login: this.epicLogin,
             logout: this.epicLogout,
-            sessionValid: epic.sessionValid
+            sessionValid: epic.sessionValid ?? false
           },
           gog: {
             library: gog.library,
